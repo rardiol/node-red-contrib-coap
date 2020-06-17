@@ -16,7 +16,7 @@ module.exports = function(RED) {
         node._inputNodes = [];    // collection of "coap in" nodes that represent coap resources
 
         // Setup node-coap server and start
-        node.server = new coap.createServer();
+        node.server = new coap.createServer({ type: 'udp6' });
         node.server.on('request', function(req, res) {
             node.handleRequest(req, res);
             res.on('error', function(err) {

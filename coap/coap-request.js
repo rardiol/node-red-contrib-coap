@@ -96,9 +96,26 @@ module.exports = function(RED) {
             var req = coap.request(reqOpts);
             req.on('response', _onResponse);
             req.on('error', function(err) {
-                node.log('client error');
-                node.log(err);
+                const msg_error = {
+                  description: 'timeout',
+                  code: err 
+                }
+                node.send(Object.assign({}, msg, {
+                  payload: msg_error,
+                  statusCode: 504
+                }));
             });
+            //req.on('error', function(err) {
+		//const msg_error = {
+		  //description: 'client error',
+		  //code: err
+		//}
+		//node.log('client error')
+                //node.send(Object.assign({}, msg, {
+                  //payload: msg_error,
+                  //statusCode: 504
+                //}));
+            //});
 
             if (payload) {
                 req.write(payload);
