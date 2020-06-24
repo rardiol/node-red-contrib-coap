@@ -13,7 +13,22 @@ module.exports = function(RED) {
         node.options.name = n.name;
         node.options.port = n.port;
 
+        node.options.ackTimeout = n.ackTimeout;
+        node.options.ackRandomFactor = n.ackRandomFactor;
+        node.options.maxRetransmit = n.maxRetransmit;
+        node.options.maxLatency = n.maxLatency;
+        node.options.piggybackReplyMs = n.piggybackReplyMs;
+
         node._inputNodes = [];    // collection of "coap in" nodes that represent coap resources
+
+        var coapTiming = {
+            ackTimeout: parseInt(node.options.ackTimeout, 10),
+            ackRandomFactor: parseInt(node.options.ackRandomFactor, 10),
+            maxRetransmit: parseInt(node.options.maxRetransmit, 10),
+            maxLatency: parseInt(node.options.maxLatency, 10),
+            piggybackReplyMs: parseInt(node.options.piggybackReplyM, 10)
+            };
+        coap.updateTiming(coapTiming);
 
         // Setup node-coap server and start
         node.server = new coap.createServer({ type: 'udp6' });
@@ -87,6 +102,8 @@ module.exports = function(RED) {
         this.options.name = n.name;
         this.options.server = n.server;
         this.options.url = n.url.charAt(0) == "/" ? n.url : "/" + n.url;
+
+        console.log(n.server);
 
         this.serverConfig = RED.nodes.getNode(this.options.server);
 

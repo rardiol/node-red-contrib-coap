@@ -12,6 +12,8 @@ module.exports = function(RED) {
         RED.nodes.createNode(this, n);
         var node = this;
 
+        this.serverConfig = RED.nodes.getNode(n.server);
+        
         // copy "coap request" configuration locally
         node.options = {};
         node.options.method = n.method;
@@ -35,8 +37,30 @@ module.exports = function(RED) {
             return payload;
         }
 
-        function _makeRequest(msg) {
-            var reqOpts = url.parse(node.options.url || msg.url);
+        function _makeRequest(msg, server) {
+            var reqOpts;
+            if (msg.ip_address && msg.path) {
+                let uri = "";
+                if (!msg.ip_address.startsWith("coap://")) {
+                    uri += "coap://";
+                }
+
+                if (!msg.ip_address.startsWith("[")) {
+                    uri += "[" + msg.ip_address + "]";
+                } else {
+                    uri += msg.ip_address;
+                }
+
+                uri += ":" + server.options.port;
+
+                if (!msg.path.startsWith("/")) {
+                    uri += "/";
+                }
+                uri += msg.path;
+                reqOpts = url.parse(uri);
+            } else {
+                reqOpts = url.parse(node.options.url || msg.url);
+            }
             reqOpts.pathname = reqOpts.path;
             reqOpts.method = ( node.options.method || msg.method || 'GET' ).toUpperCase();
             reqOpts.headers = {};
@@ -93,6 +117,15 @@ module.exports = function(RED) {
                 node.stream.close();
             }
 
+            var coapTiming = {
+                ackTimeout: parseInt(server.options.ackTimeout, 10),
+                ackRandomFactor: parseInt(server.options.ackRandomFactor, 10),
+                maxRetransmit: parseInt(server.options.maxRetransmit, 10),
+                maxLatency: parseInt(server.options.maxLatency, 10),
+                piggybackReplyMs: parseInt(server.options.piggybackReplyM, 10)
+              };
+            coap.updateTiming(coapTiming);
+
             var req = coap.request(reqOpts);
             req.on('response', _onResponse);
             req.on('error', function(err) {
@@ -124,7 +157,7 @@ module.exports = function(RED) {
         }
 
         this.on('input', function(msg) {
-            _makeRequest(msg);
+            _makeRequest(msg, this.serverConfig);
         });
     }
     RED.nodes.registerType("coap request", CoapRequestNode);

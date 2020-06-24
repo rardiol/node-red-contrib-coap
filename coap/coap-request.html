@@ -3,6 +3,7 @@
         category: 'function',
         color: '#a6bbcf',
         defaults: {
+            server: {type:"coap-server",required:true},
             method: {
               value:"GET",
               validate:
@@ -28,6 +29,10 @@
 </script>
 
 <script type="text/x-red" data-template-name="coap request">
+    <div class="form-row">
+        <label for="node-input-server"><i class="fa fa-bookmark"></i> Server</label>
+        <input type="text" id="node-input-server"/>
+    </div>
     <div class="form-row">
         <label for="node-input-url"><i class="fa fa-globe"></i> URL</label>
         <input type="text" id="node-input-url" placeholder="coap://localhost/test"/>
