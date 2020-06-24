@@ -122,8 +122,9 @@ module.exports = function(RED) {
                 ackRandomFactor: parseInt(server.options.ackRandomFactor, 10),
                 maxRetransmit: parseInt(server.options.maxRetransmit, 10),
                 maxLatency: parseInt(server.options.maxLatency, 10),
-                piggybackReplyMs: parseInt(server.options.piggybackReplyM, 10)
+                piggybackReplyMs: parseInt(server.options.piggybackReplyMs, 10)
               };
+            console.log(coapTiming);
             coap.updateTiming(coapTiming);
 
             var req = coap.request(reqOpts);
