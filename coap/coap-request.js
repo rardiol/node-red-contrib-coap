@@ -117,7 +117,7 @@ module.exports = function(RED) {
                 node.stream.close();
             }
 
-            var coapTiming = {
+/*            var coapTiming = {
                 ackTimeout: parseInt(server.options.ackTimeout, 10),
                 ackRandomFactor: parseInt(server.options.ackRandomFactor, 10),
                 maxRetransmit: parseInt(server.options.maxRetransmit, 10),
@@ -126,7 +126,7 @@ module.exports = function(RED) {
               };
             console.log(coapTiming);
             coap.updateTiming(coapTiming);
-
+*/
             var req = coap.request(reqOpts);
             req.on('response', _onResponse);
             req.on('error', function(err) {
