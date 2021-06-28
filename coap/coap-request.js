@@ -80,7 +80,7 @@ module.exports = function(RED) {
                     if ( node.options.rawBuffer ) {
                         _send(data);
                     } else if (res.headers['Content-Format'] === 'text/plain') {
-                        _send(data.toString('ascii'));
+                        _send(data.toString('base64'));
                     } else if (res.headers['Content-Format'] === 'application/json') {
                         _send(JSON.parse(data.toString()));
                     } else if (res.headers['Content-Format'] === 'application/cbor') {
