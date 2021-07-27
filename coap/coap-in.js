@@ -26,7 +26,7 @@ module.exports = function(RED) {
             ackRandomFactor: parseInt(node.options.ackRandomFactor, 10),
             maxRetransmit: parseInt(node.options.maxRetransmit, 10),
             maxLatency: parseInt(node.options.maxLatency, 10),
-            piggybackReplyMs: parseInt(node.options.piggybackReplyM, 10),
+            piggybackReplyMs: parseInt(node.options.piggybackReplyMs, 10),
 	    sendAcksForNonConfirmablePackets: true,
 	    maxPacketSize: 1280
             };
